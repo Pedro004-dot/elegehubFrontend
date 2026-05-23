@@ -1,3 +1,9 @@
+/**
+ * @deprecated Esta pagina sera removida na v2.
+ * O Video Cuts usa dados mockados e foi removido do menu.
+ * Sera reimplementado com integracao real de redes sociais no futuro.
+ */
+
 import { useState } from 'react'
 import { useVideoCuts } from '../hooks/use-video-cuts'
 import { VideoCutsHeader } from '../components/video-cuts/video-cuts-header'

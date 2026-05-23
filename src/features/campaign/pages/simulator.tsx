@@ -1,3 +1,9 @@
+/**
+ * @deprecated Esta pagina sera removida na v2.
+ * O Simulador usa dados mockados e foi removido do menu.
+ * Sera reimplementado com modelo preditivo real no futuro.
+ */
+
 import { Separator } from '@/components/ui/separator'
 import { SimulatorHeader } from '../components/simulator-header'
 import { BudgetSlider } from '../components/budget-slider'

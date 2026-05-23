@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { MapHeader } from '../components/map-header'
 import { KpiCards } from '../components/kpi-cards'
 import { BrazilMap } from '../components/brazil-map'
@@ -6,18 +6,30 @@ import { MunicipalityPanel } from '../components/municipality-panel'
 import { MapLegend } from '../components/map-legend'
 import { useMunicipalities } from '../hooks/use-municipalities'
 import { calculateKpis } from '../data/mock-municipalities'
+import { useCurrentCampaignSafe } from '@/features/auth/hooks/useCurrentCampaign'
 import type { Municipality, MunicipalityClassification } from '../types'
 import type { CandidatoResumo } from '../services/analytics'
 
 export function StrategicMapPage() {
-  const [selectedState, setSelectedState] = useState('MG')
+  const campaign = useCurrentCampaignSafe()
+
+  // Usa o estado da campanha como default, ou MG se nao tiver campanha
+  const [selectedState, setSelectedState] = useState(campaign?.state || 'MG')
+
+  // Atualiza o estado selecionado quando a campanha mudar
+  useEffect(() => {
+    if (campaign?.state) {
+      setSelectedState(campaign.state)
+    }
+  }, [campaign?.state])
   const [selectedMunicipality, setSelectedMunicipality] = useState<Municipality | null>(null)
   const [activeFilters, setActiveFilters] = useState<MunicipalityClassification[]>([])
   const [selectedCargo, setSelectedCargo] = useState('deputado estadual')
   const [selectedCandidato, setSelectedCandidato] = useState<CandidatoResumo | null>(null)
 
-  // Buscar municipios com dados reais (apenas MG por enquanto)
+  // Buscar municipios com dados reais do estado selecionado
   const { municipalities: realMunicipalities, loading, error } = useMunicipalities({
+    uf: selectedState,
     cargo: selectedCargo,
     candidato: selectedCandidato,
   })
@@ -27,14 +39,10 @@ export function StrategicMapPage() {
     // Implementar tooltip global se necessário
   }, [])
 
-  // Filtrar municípios pelo estado (usa dados reais para MG, mock para outros)
+  // Usa municipios carregados da API (suporta qualquer UF)
   const stateMunicipalities = useMemo(() => {
-    if (selectedState === 'MG' && realMunicipalities.length > 0) {
-      return realMunicipalities
-    }
-    // Fallback para outros estados ou enquanto carrega
-    return []
-  }, [selectedState, realMunicipalities])
+    return realMunicipalities
+  }, [realMunicipalities])
 
   // Calcular KPIs
   const kpis = useMemo(() => {
@@ -111,6 +119,8 @@ export function StrategicMapPage() {
             onHoverMunicipality={handleHoverMunicipality}
             selectedCandidato={selectedCandidato}
             cargo={selectedCargo}
+            municipalitiesData={stateMunicipalities}
+            loading={loading}
           />
           <MapLegend />
         </div>

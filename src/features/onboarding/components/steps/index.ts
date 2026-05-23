@@ -1,0 +1,8 @@
+export { Step1Identidade } from './Step1Identidade'
+export { Step2Historico } from './Step2Historico'
+export { Step3Perfil } from './Step3Perfil'
+export { Step4Rede } from './Step4Rede'
+export { Step5Recursos } from './Step5Recursos'
+export { Step6Adversarios } from './Step6Adversarios'
+export { Step7Objetivos } from './Step7Objetivos'
+export { StepComplete } from './StepComplete'

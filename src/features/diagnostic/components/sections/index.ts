@@ -1,0 +1,7 @@
+export { ExecutiveSummarySection } from './executive-summary-section'
+export { CandidateProfileSection } from './candidate-profile-section'
+export { TerritorialSection } from './territorial-section'
+export { CompetitorsSection } from './competitors-section'
+export { BenchmarkSection } from './benchmark-section'
+export { NarrativeSection } from './narrative-section'
+export { ActionPlanSection } from './action-plan-section'

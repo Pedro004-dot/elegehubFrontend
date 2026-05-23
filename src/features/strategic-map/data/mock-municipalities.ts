@@ -1,3 +1,9 @@
+/**
+ * @deprecated Este arquivo sera removido na v2.
+ * Usar dados reais da API /analytics/municipios.
+ * A funcao calculateKpis ainda eh usada e sera movida para utils.
+ */
+
 import type { Municipality, MunicipalityClassification } from '../types'
 
 const classifications: MunicipalityClassification[] = ['consolidar', 'conquistar', 'disputar', 'evitar']

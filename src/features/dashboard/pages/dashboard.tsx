@@ -1,3 +1,9 @@
+/**
+ * @deprecated Este modulo sera removido na v2.
+ * O Dashboard usa dados mockados e foi removido do menu.
+ * Usar dados reais da API quando disponivel.
+ */
+
 import { DashboardHeader } from '../components/dashboard-header'
 import { HeroMetrics } from '../components/hero-metrics'
 import { AlertsPanel } from '../components/alerts-panel'

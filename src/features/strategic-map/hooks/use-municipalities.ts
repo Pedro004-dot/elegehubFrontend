@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { Municipality } from '../types'
 import {
-  fetchMunicipiosMG,
+  fetchMunicipios,
   fetchFilters,
   transformMunicipioToMapFormat,
   type MapaMunicipioMG,
@@ -10,7 +10,9 @@ import {
 } from '../services/analytics'
 
 interface UseMunicipalitiesOptions {
+  uf?: string
   cargo?: string
+  ano?: number
   regiao?: string
   candidato?: CandidatoResumo | null
 }
@@ -24,7 +26,7 @@ interface UseMunicipalitiesResult {
 }
 
 export function useMunicipalities(options: UseMunicipalitiesOptions = {}): UseMunicipalitiesResult {
-  const { cargo, regiao, candidato } = options
+  const { uf = 'MG', cargo, ano, regiao, candidato } = options
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const [filters, setFilters] = useState<FiltersData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -37,13 +39,13 @@ export function useMunicipalities(options: UseMunicipalitiesOptions = {}): UseMu
     try {
       // Busca municipios e filtros em paralelo
       const [municipiosData, filtersData] = await Promise.all([
-        fetchMunicipiosMG({ cargo, regiao }),
+        fetchMunicipios({ uf, cargo, ano, regiao }),
         fetchFilters(),
       ])
 
       // Transforma para formato do mapa com classificacao por compatibilidade
       const transformed = municipiosData.map((m: MapaMunicipioMG) =>
-        transformMunicipioToMapFormat(m, candidato)
+        transformMunicipioToMapFormat(m, candidato, uf)
       )
 
       setMunicipalities(transformed)
@@ -54,7 +56,7 @@ export function useMunicipalities(options: UseMunicipalitiesOptions = {}): UseMu
     } finally {
       setLoading(false)
     }
-  }, [cargo, regiao, candidato])
+  }, [uf, cargo, ano, regiao, candidato])
 
   useEffect(() => {
     fetchData()

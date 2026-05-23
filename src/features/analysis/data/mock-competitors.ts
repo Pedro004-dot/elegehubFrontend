@@ -1,3 +1,8 @@
+/**
+ * @deprecated Este arquivo sera removido na v2.
+ * Usar dados reais de candidatos da API /analytics/candidatos.
+ */
+
 import type { Competitor } from '../types'
 
 export const MOCK_COMPETITORS: Competitor[] = [

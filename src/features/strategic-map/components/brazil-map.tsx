@@ -20,6 +20,8 @@ interface BrazilMapProps {
   onHoverMunicipality: (municipality: Municipality | null) => void
   selectedCandidato?: CandidatoResumo | null
   cargo?: string
+  municipalitiesData?: Municipality[]
+  loading?: boolean
 }
 
 // Componente filho para adicionar layers (precisa estar dentro do Map)
@@ -194,7 +196,9 @@ export function BrazilMap({
   onMunicipalityClick,
   onHoverMunicipality,
   selectedCandidato,
-  cargo
+  cargo,
+  municipalitiesData,
+  loading: externalLoading
 }: BrazilMapProps) {
   const [geojsonData, setGeojsonData] = useState<FeatureCollection | null>(null)
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
@@ -215,9 +219,16 @@ export function BrazilMap({
     return record
   }, [municipalities])
 
-  // Buscar municípios da API
+  // Usar dados externos ou buscar da API (fallback)
   useEffect(() => {
     const loadMunicipalities = async () => {
+      // Se dados externos foram fornecidos, usar eles (elimina fetch duplicado)
+      if (municipalitiesData) {
+        setMunicipalities(municipalitiesData)
+        return
+      }
+
+      // Fallback: buscar da API (para compatibilidade se usado standalone)
       try {
         // Para MG, usar API de analytics com dados reais
         if (selectedState === 'MG') {
@@ -251,7 +262,7 @@ export function BrazilMap({
     }
 
     loadMunicipalities()
-  }, [selectedState, selectedCandidato, cargo])
+  }, [selectedState, selectedCandidato, cargo, municipalitiesData])
 
   // Carregar GeoJSON da API do IBGE e enriquecer com dados da nossa API
   useEffect(() => {
@@ -316,7 +327,7 @@ export function BrazilMap({
             onHoverMunicipality={handleHover}
           />
         )}
-        {isLoading && (
+        {(isLoading || externalLoading) && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-20">
             <div className="text-sm text-muted-foreground">Carregando municípios...</div>
           </div>

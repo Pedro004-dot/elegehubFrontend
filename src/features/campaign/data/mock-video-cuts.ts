@@ -1,3 +1,8 @@
+/**
+ * @deprecated Este arquivo sera removido na v2.
+ * Usar dados reais de video cuts via integracao com redes sociais.
+ */
+
 import type { VideoCut, VideoCutsKpis } from '../types/video-cuts'
 
 export const MOCK_VIDEO_CUTS: VideoCut[] = [

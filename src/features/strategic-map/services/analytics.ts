@@ -133,12 +133,31 @@ export async function fetchCandidatoGastos(candidatoId: number): Promise<GastoCa
   return data.data
 }
 
-export async function fetchMunicipiosMG(params?: {
+/**
+ * Busca municipios de um estado com dados eleitorais
+ * @param uf - Sigla do estado (ex: MG, SP, RJ)
+ * @param cargo - Cargo politico (DEPUTADO ESTADUAL, etc)
+ * @param ano - Ano da eleicao (default: 2022)
+ * @param regiao - Filtro opcional por regiao
+ */
+export async function fetchMunicipios(params?: {
+  uf?: string
   cargo?: string
+  ano?: number
   regiao?: string
 }): Promise<MapaMunicipioMG[]> {
   const { data } = await api.get<ApiResponse<MapaMunicipioMG[]>>('/analytics/municipios', { params })
   return data.data
+}
+
+/**
+ * @deprecated Use fetchMunicipios com parametro uf
+ */
+export async function fetchMunicipiosMG(params?: {
+  cargo?: string
+  regiao?: string
+}): Promise<MapaMunicipioMG[]> {
+  return fetchMunicipios({ ...params, uf: 'MG' })
 }
 
 export async function fetchMunicipioRanking(
@@ -306,10 +325,14 @@ export function calculateCompatibilityScore(
 /**
  * Transforma dados da API em formato do mapa
  * Quando candidatoSelecionado eh passado, usa classificacao por compatibilidade politica
+ * @param municipio - Dados do municipio da API
+ * @param candidatoSelecionado - Candidato selecionado para classificacao
+ * @param uf - Sigla do estado (default: MG para compatibilidade)
  */
 export function transformMunicipioToMapFormat(
   municipio: MapaMunicipioMG,
-  candidatoSelecionado?: CandidatoResumo | null
+  candidatoSelecionado?: CandidatoResumo | null,
+  uf: string = 'MG'
 ): Municipality {
   let classification: MunicipalityClassification = 'disputar'
   let score = 50
@@ -363,7 +386,7 @@ export function transformMunicipioToMapFormat(
     id: String(municipio.id),
     ibgeCode: municipio.codigo_ibge,
     name: municipio.nome,
-    state: 'MG',
+    state: uf,
     region: municipio.regiao || 'Sem regiao',
     population: municipio.populacao || 0,
     classification,
@@ -377,10 +400,14 @@ export function transformMunicipioToMapFormat(
 /**
  * Transforma lista de municipios para o formato do mapa
  * Se candidatoSelecionado for passado, usa classificacao por compatibilidade politica
+ * @param municipios - Lista de municipios da API
+ * @param candidatoSelecionado - Candidato selecionado para classificacao
+ * @param uf - Sigla do estado (default: MG para compatibilidade)
  */
 export function transformMunicipiosForMap(
   municipios: MapaMunicipioMG[],
-  candidatoSelecionado?: CandidatoResumo | null
+  candidatoSelecionado?: CandidatoResumo | null,
+  uf: string = 'MG'
 ): Municipality[] {
-  return municipios.map((m) => transformMunicipioToMapFormat(m, candidatoSelecionado))
+  return municipios.map((m) => transformMunicipioToMapFormat(m, candidatoSelecionado, uf))
 }
