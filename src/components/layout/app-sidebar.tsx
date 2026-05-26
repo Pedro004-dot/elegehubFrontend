@@ -1,10 +1,12 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Map,
-  Trophy,
   Users,
   LogOut,
-  Sparkles,
+  List,
+  History,
+  Film,
+  UserSearch,
 } from 'lucide-react'
 
 import {
@@ -24,42 +26,22 @@ import { CampaignSwitcher } from '@/features/auth/components/CampaignSwitcher'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 
-// Menu com apenas as paginas funcionais (dados reais)
+// Menu simplificado - produto v2
 const menuGroups = [
   {
-    title: 'Diagnostico',
+    title: 'Inteligencia Territorial',
     items: [
-      { title: 'Diagnostico Estrategico', url: '/diagnostico', icon: Sparkles },
+      { title: 'Mapa Exploratorio', url: '/mapa', icon: Map },
+      { title: 'Lista de Municipios', url: '/municipios', icon: List },
+      { title: 'Concorrentes', url: '/concorrentes', icon: UserSearch },
+      { title: 'Historico', url: '/historico', icon: History },
+      { title: 'Cortes', url: '/cortes', icon: Film },
     ],
   },
-  {
-    title: 'Mapa Estrategico',
-    items: [
-      { title: 'Plano de Acao', url: '/mapa/plano-acao', icon: Map },
-    ],
-  },
-  {
-    title: 'Analise',
-    items: [
-      { title: 'Perfil Vencedor', url: '/analise/perfil-vencedor', icon: Trophy },
-      // @deprecated - Radar de Adversarios usa mock data, escondido do menu
-      // { title: 'Radar de Adversarios', url: '/analise/radar-adversarios', icon: Radar },
-    ],
-  },
-  // @deprecated - Simulador e Cortes usam mock data, escondidos do menu
-  // {
-  //   title: 'Campanha',
-  //   items: [
-  //     { title: 'Simulador', url: '/campanha/simulador', icon: SlidersHorizontal },
-  //     { title: 'Cortes', url: '/campanha/cortes', icon: Video },
-  //   ],
-  // },
   {
     title: 'Configuracoes',
     items: [
       { title: 'Equipe', url: '/configuracoes/equipe', icon: Users },
-      // @deprecated - Redes Sociais usa mock data, escondido do menu
-      // { title: 'Redes Sociais', url: '/configuracoes/redes-sociais', icon: Share2 },
     ],
   },
 ]
@@ -89,7 +71,7 @@ export function AppSidebar() {
               </div>
               <div className="flex flex-col gap-0.5 leading-none">
                 <span className="font-semibold">ElegeHub</span>
-                <span className="text-xs text-muted-foreground">CRM Politico</span>
+                <span className="text-xs text-muted-foreground">Inteligencia Territorial</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -109,7 +91,7 @@ export function AppSidebar() {
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.url}>
                     <SidebarMenuButton
-                      isActive={location.pathname === item.url}
+                      isActive={location.pathname === item.url || location.pathname.startsWith(item.url + '/')}
                       tooltip={item.title}
                       render={<Link to={item.url} />}
                     >

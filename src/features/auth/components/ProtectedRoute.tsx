@@ -18,6 +18,46 @@ interface ProtectedRouteProps {
   children?: React.ReactNode
 }
 
+/**
+ * Skeleton que simula o layout da aplicacao durante carregamento.
+ * Melhora UX percebido vs spinner generico.
+ */
+function AppSkeleton() {
+  return (
+    <div className="flex h-screen bg-background">
+      {/* Sidebar skeleton */}
+      <div className="hidden w-64 flex-shrink-0 border-r bg-card p-4 md:block">
+        <div className="h-10 w-32 animate-pulse rounded-lg bg-muted" />
+        <div className="mt-8 space-y-3">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-9 w-full animate-pulse rounded-md bg-muted" />
+          ))}
+        </div>
+      </div>
+
+      {/* Main content skeleton */}
+      <div className="flex flex-1 flex-col">
+        {/* Header skeleton */}
+        <div className="h-14 border-b bg-card px-4 flex items-center justify-between">
+          <div className="h-6 w-48 animate-pulse rounded bg-muted" />
+          <div className="h-8 w-8 animate-pulse rounded-full bg-muted" />
+        </div>
+
+        {/* Content skeleton */}
+        <div className="flex-1 p-6">
+          <div className="h-8 w-64 animate-pulse rounded bg-muted" />
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-32 animate-pulse rounded-lg bg-muted" />
+            ))}
+          </div>
+          <div className="mt-6 h-96 animate-pulse rounded-lg bg-muted" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function ProtectedRoute({
   requireCampaign = false,
   allowedRoles,
@@ -26,18 +66,10 @@ export function ProtectedRoute({
   const { isAuthenticated, isLoading, isLoadingCampaigns, campaigns, currentCampaign } = useAuth()
   const location = useLocation()
 
-  // Mostra loading enquanto verifica autenticacao ou carrega campanhas
+  // Mostra skeleton enquanto verifica autenticacao ou carrega campanhas
+  // Skeleton eh melhor que spinner pois da sensacao de progresso
   if (isLoading || (isAuthenticated && isLoadingCampaigns)) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-muted-foreground">
-            {isLoading ? 'Carregando...' : 'Carregando campanhas...'}
-          </p>
-        </div>
-      </div>
-    )
+    return <AppSkeleton />
   }
 
   // Redireciona para login se nao autenticado
@@ -52,16 +84,9 @@ export function ProtectedRoute({
       return <Navigate to="/onboarding/create-campaign" replace />
     }
 
-    // Se tem campanhas mas nenhuma selecionada, seleciona a primeira
+    // Se tem campanhas mas nenhuma selecionada, mostra skeleton
     if (!currentCampaign) {
-      return (
-        <div className="flex h-screen items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <p className="text-muted-foreground">Carregando campanha...</p>
-          </div>
-        </div>
-      )
+      return <AppSkeleton />
     }
 
     // Verifica role se especificado

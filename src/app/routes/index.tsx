@@ -8,28 +8,18 @@ import { OnboardingPage } from '@/features/auth/pages/OnboardingPage'
 import { TeamSettingsPage } from '@/features/auth/pages/TeamSettingsPage'
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute'
 
-// Onboarding Wizard (7 etapas - completar perfil apos criar campanha)
-import { OnboardingWizardPage } from '@/features/onboarding'
+// Mapa Exploratorio (Etapa 3 - Refatorado)
+import { ExploratoryMapPage } from '@/features/map'
 
-// App Pages (funcionais)
-import { StrategicMapPage } from '@/features/strategic-map/pages/strategic-map'
-import { WinnerProfilePage } from '@/features/analysis/pages/winner-profile'
+// Municipio (Etapa 4 - Refatorado)
+// Lista de Municipios e Historico (Etapa 6)
+import { MunicipalityPage, MunicipalityListPage, BriefingHistoryPage } from '@/features/municipality'
 
-// Diagnostic Pages
-import { DiagnosticHomePage } from '@/features/diagnostic/pages/diagnostic-home-page'
-import { DiagnosticGeneratingPage } from '@/features/diagnostic/pages/diagnostic-generating-page'
-import { DiagnosticSectionPage } from '@/features/diagnostic/pages/diagnostic-section-page'
-import { DiagnosticMapFullscreenPage } from '@/features/diagnostic/pages/diagnostic-map-fullscreen-page'
-import { DiagnosticPresentPage } from '@/features/diagnostic/pages/diagnostic-present-page'
-import { DiagnosticSettingsPage } from '@/features/diagnostic/pages/diagnostic-settings-page'
-import { DiagnosticHistoryPage } from '@/features/diagnostic/pages/diagnostic-history-page'
+// Cortes (Galeria de videos)
+import { CutsGalleryPage } from '@/features/cuts'
 
-// @deprecated - Paginas com mock data (escondidas mas mantidas para referencia)
-import { DashboardPage } from '@/features/dashboard/pages/dashboard'
-import { CompetitorRadarPage } from '@/features/analysis/pages/competitor-radar'
-import { SimulatorPage } from '@/features/campaign/pages/simulator'
-import { VideoCutsPage } from '@/features/campaign/pages/video-cuts'
-import { SocialConnectionsPage } from '@/features/social-accounts/pages/social-connections'
+// Concorrentes (Analise de concorrentes)
+import { ConcorrentesPage } from '@/features/concorrentes/pages/concorrentes-page'
 
 export function AppRoutes() {
   return (
@@ -44,7 +34,8 @@ export function AppRoutes() {
       <Route path="/auth/callback" element={<Navigate to="/" replace />} />
 
       {/* ============================================ */}
-      {/* Onboarding - Criar primeira campanha (sem campanha) */}
+      {/* Onboarding - Tela unica com 4 campos */}
+      {/* Redireciona direto para /mapa apos criar campanha */}
       {/* ============================================ */}
       <Route
         path="/onboarding/create-campaign"
@@ -54,55 +45,47 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
-      {/* ============================================ */}
-      {/* Onboarding Wizard - Completar perfil (requer campanha) */}
-      {/* Wizard de 7 etapas para configurar campanha */}
-      {/* ============================================ */}
-      <Route
-        path="/onboarding"
-        element={
-          <ProtectedRoute requireCampaign>
-            <OnboardingWizardPage />
-          </ProtectedRoute>
-        }
-      />
+      {/* Rota legada - redireciona para nova tela */}
+      <Route path="/onboarding" element={<Navigate to="/onboarding/create-campaign" replace />} />
 
       {/* ============================================ */}
       {/* Rotas Protegidas (requer auth + campanha) */}
       {/* ============================================ */}
       <Route element={<ProtectedRoute requireCampaign />}>
         <Route element={<MainLayout />}>
-          {/* Rota raiz redireciona para o mapa estrategico */}
-          <Route path="/" element={<Navigate to="/mapa/plano-acao" replace />} />
+          {/* Rota raiz redireciona para o mapa */}
+          <Route path="/" element={<Navigate to="/mapa" replace />} />
 
-          {/* Mapa Estrategico - FUNCIONAL (dados reais TSE) */}
-          <Route path="/mapa/plano-acao" element={<StrategicMapPage />} />
+          {/* Mapa Exploratorio (Etapa 3 - Refatorado) */}
+          {/* Coloracao por indicador, sem classificacoes ou scores */}
+          <Route path="/mapa" element={<ExploratoryMapPage />} />
+          {/* Rotas legadas - redirecionam para mapa */}
+          <Route path="/mapa/plano-acao" element={<Navigate to="/mapa" replace />} />
+          <Route path="/oportunidade" element={<Navigate to="/mapa" replace />} />
 
-          {/* Analise - Perfil Vencedor - FUNCIONAL (em desenvolvimento) */}
-          <Route path="/analise/perfil-vencedor" element={<WinnerProfilePage />} />
-
-          {/* Diagnostico Estrategico - FUNCIONAL */}
-          <Route path="/diagnostico" element={<DiagnosticHomePage />} />
-          <Route path="/diagnostico/gerando" element={<DiagnosticGeneratingPage />} />
-          <Route path="/diagnostico/secao/:sectionType" element={<DiagnosticSectionPage />} />
-          <Route path="/diagnostico/mapa" element={<DiagnosticMapFullscreenPage />} />
-          <Route path="/diagnostico/apresentar" element={<DiagnosticPresentPage />} />
-          <Route path="/diagnostico/configuracoes" element={<DiagnosticSettingsPage />} />
-          <Route path="/diagnostico/historico" element={<DiagnosticHistoryPage />} />
+          {/* Municipio (Etapa 4 - Refatorado) */}
+          {/* Tabs: Briefing + Indicadores */}
+          <Route path="/municipio/:codigoIbge" element={<MunicipalityPage />} />
+          {/* Rotas legadas - redirecionam para nova estrutura */}
+          <Route path="/oportunidade/briefing/:codigoIbge" element={<Navigate to="/municipio/:codigoIbge" replace />} />
 
           {/* Configuracoes - Equipe */}
           <Route path="/configuracoes/equipe" element={<TeamSettingsPage />} />
 
-          {/* ============================================ */}
-          {/* @deprecated - Paginas com mock data */}
-          {/* Mantidas para referencia, mas escondidas do menu */}
-          {/* ============================================ */}
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/analise/radar-adversarios" element={<CompetitorRadarPage />} />
-          <Route path="/campanha/simulador" element={<SimulatorPage />} />
-          <Route path="/campanha/cortes" element={<VideoCutsPage />} />
-          <Route path="/configuracoes/redes-sociais" element={<SocialConnectionsPage />} />
+          {/* Lista de Municipios (Etapa 6) */}
+          <Route path="/municipios" element={<MunicipalityListPage />} />
+
+          {/* Historico de Briefings (Etapa 6) */}
+          <Route path="/historico" element={<BriefingHistoryPage />} />
+
+          {/* Cortes - Galeria de videos */}
+          <Route path="/cortes" element={<CutsGalleryPage />} />
+
+          {/* Concorrentes - Analise de concorrentes */}
+          <Route path="/concorrentes" element={<ConcorrentesPage />} />
+
+          {/* TODO Etapa 7: Perfil do usuario (edicao dos 4 campos) */}
+          {/* <Route path="/perfil" element={<ProfilePage />} /> */}
         </Route>
       </Route>
 

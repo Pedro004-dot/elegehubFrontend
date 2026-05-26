@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { FeatureCollection } from 'geojson'
-import { fetchBrazilOutline, createMaskGeoJSON } from '@/features/strategic-map/services/brazil-mask'
+import { fetchBrazilOutline, createMaskGeoJSON } from '@/features/map/services/brazil-mask'
 
 /**
  * Hook para carregar a máscara do Brasil.

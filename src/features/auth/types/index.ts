@@ -6,6 +6,7 @@ export interface Campaign {
   candidate_name: string
   position: string
   state: string
+  party?: string
   year: number
   owner_id: string
   is_active: boolean
@@ -37,6 +38,7 @@ export interface CreateCampaignInput {
   candidateName: string
   position: string
   state: string
+  party?: string
   year?: number
 }
 

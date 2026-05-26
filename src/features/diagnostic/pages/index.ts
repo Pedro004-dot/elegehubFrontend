@@ -1,7 +1,0 @@
-export { DiagnosticHomePage } from './diagnostic-home-page'
-export { DiagnosticGeneratingPage } from './diagnostic-generating-page'
-export { DiagnosticSectionPage } from './diagnostic-section-page'
-export { DiagnosticMapFullscreenPage } from './diagnostic-map-fullscreen-page'
-export { DiagnosticPresentPage } from './diagnostic-present-page'
-export { DiagnosticSettingsPage } from './diagnostic-settings-page'
-export { DiagnosticHistoryPage } from './diagnostic-history-page'

@@ -76,11 +76,6 @@
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
 
-  /* Diagnostic Classification Colors */
-  --color-fiel: var(--fiel);
-  --color-pendular: var(--pendular);
-  --color-hostil: var(--hostil);
-  --color-alta-abstencao: var(--alta-abstencao);
 }
 
 @layer base {
@@ -146,11 +141,6 @@
     --danger: oklch(0.577 0.245 27.325);
     --danger-foreground: oklch(0.985 0 0);
 
-    /* Diagnostic Classification Colors */
-    --fiel: oklch(0.627 0.194 149.214);
-    --pendular: oklch(0.795 0.184 86.047);
-    --hostil: oklch(0.577 0.245 27.325);
-    --alta-abstencao: oklch(0.553 0 0);
   }
 
   .dark {
@@ -214,11 +204,6 @@
     --danger: oklch(0.650 0.245 27.325);
     --danger-foreground: oklch(0.985 0 0);
 
-    /* Diagnostic Classification Colors (Dark) */
-    --fiel: oklch(0.700 0.200 149.214);
-    --pendular: oklch(0.850 0.184 86.047);
-    --hostil: oklch(0.650 0.245 27.325);
-    --alta-abstencao: oklch(0.600 0 0);
   }
 
   * {
