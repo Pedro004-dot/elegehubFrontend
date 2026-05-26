@@ -17,7 +17,7 @@ interface UploadStatus {
 }
 
 export function CutsGalleryPage() {
-  const { data: cuts, total, isLoading, refetch } = useCuts()
+  const { data: cuts, total, isLoading } = useCuts()
   const [selectedCut, setSelectedCut] = useState<VideoCut | null>(null)
   const [uploadStatuses, setUploadStatuses] = useState<UploadStatus[]>([])
   const [isUploading, setIsUploading] = useState(false)
@@ -46,7 +46,7 @@ export function CutsGalleryPage() {
         const path = `${folder}/${fileName}`
 
         // Upload para Supabase Storage
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from('video-cuts')
           .upload(path, file, {
             cacheControl: '3600',
